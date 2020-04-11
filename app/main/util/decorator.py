@@ -5,6 +5,7 @@ from app.main.service.auth_helper import Auth
 
 
 def token_required(f):
+    """Base Authenticate Wrapper"""
     @wraps(f)
     def decorated(*args, **kwargs):
 
@@ -20,6 +21,7 @@ def token_required(f):
 
 
 def admin_token_required(f):
+    """Admin Authenticate Wrapper"""
     @wraps(f)
     def decorated(*args, **kwargs):
 
