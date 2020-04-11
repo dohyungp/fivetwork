@@ -32,6 +32,8 @@ class LogoutAPI(Resource):
     """
     @api.doc('logout a user')
     @api.expect(auth_parser)
+    @api.response(200, 'User successfully logged out.')
+    @api.response(401, 'User logout was failed.')
     def post(self):
         """Logout method"""
         # get auth token
