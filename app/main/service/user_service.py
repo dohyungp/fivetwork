@@ -4,6 +4,21 @@ from app.main import db
 from app.main.model.user import User
 
 
+def create_admin(data):
+    """Create Super User"""
+    user = User.query.filter_by(email=data['email']).first()
+    assert not user, f'Admin {data["email"]} already exists!'
+    new_user = User(
+        email=data['email'],
+        username=data['username'],
+        password=data['password'],
+        hire_date=datetime(1900, 1, 1).date(),
+        admin=True
+    )
+    save_changes(new_user)
+    return f'Admin {data["email"]} is successfully created!'
+
+
 def save_new_user(data):
     """Save new user service"""
     user = User.query.filter_by(email=data['email']).first()
