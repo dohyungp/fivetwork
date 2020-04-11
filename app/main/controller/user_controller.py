@@ -5,21 +5,22 @@ from ..util.dto import UserDto
 from ..service.user_service import save_new_user, get_all_users, get_a_user
 
 api = UserDto.api
-_user = UserDto.user
+_signup = UserDto.signup
+_lookup = UserDto.lookup
 
 
 @api.route('/')
 class UserList(Resource):
     """UserList Route"""
     @api.doc('list_of_registered_users')
-    @api.marshal_list_with(_user, envelope='data')
+    @api.marshal_list_with(_lookup, envelope='data')
     def get(self):
         """List all registered users"""
         return get_all_users()
 
     @api.response(201, 'User successfully created.')
     @api.doc('create a new user')
-    @api.expect(_user, validate=True)
+    @api.expect(_signup, validate=True)
     def post(self):
         """Creates a new User """
         data = request.json
@@ -32,7 +33,7 @@ class UserList(Resource):
 class User(Resource):
     """User Route"""
     @api.doc('get a user')
-    @api.marshal_with(_user, skip_none=True)
+    @api.marshal_with(_lookup, skip_none=True)
     def get(self, id):
         """get a user given its identifier"""
         user = get_a_user(id)
