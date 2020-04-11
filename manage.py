@@ -15,6 +15,7 @@ migrate = Migrate(app, db)
 
 @app.cli.command('db')
 def migrate_db():
+    """Run Database Migration"""
     MigrateCommand()
 
 

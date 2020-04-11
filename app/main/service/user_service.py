@@ -1,19 +1,19 @@
-import uuid
-import datetime
-
+from datetime import datetime
+import jwt
 from app.main import db
 from app.main.model.user import User
 
 
 def save_new_user(data):
+    """Save new user service"""
     user = User.query.filter_by(email=data['email']).first()
     if not user:
         new_user = User(
-            public_id=str(uuid.uuid4()),
             email=data['email'],
             username=data['username'],
             password=data['password'],
-            registered_on=datetime.datetime.utcnow()
+            hire_date=datetime.strptime(data['hire_date'], '%Y-%m-%d'),
+            # registered_on=datetime.datetime.utcnow()
         )
         save_changes(new_user)
         return generate_token(new_user)
@@ -26,19 +26,23 @@ def save_new_user(data):
 
 
 def get_all_users():
+    """Get all user list"""
     return User.query.all()
 
 
-def get_a_user(public_id):
-    return User.query.filter_by(public_id=public_id).first()
+def get_a_user(id):
+    """Get a user by id"""
+    return User.query.filter_by(id=id).first()
 
 
 def save_changes(data):
+    """Save new data"""
     db.session.add(data)
     db.session.commit()
 
 
 def generate_token(user):
+    """Generate new token based on JWT"""
     try:
         # generate the auth token
         auth_token = user.encode_auth_token(user.id)
@@ -48,7 +52,7 @@ def generate_token(user):
             'Authorization': auth_token.decode()
         }
         return response_object, 201
-    except Exception as e:
+    except jwt.DecodeError:
         response_object = {
             'status': 'fail',
             'message': 'Some error occurred. Please try again.'

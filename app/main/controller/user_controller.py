@@ -10,6 +10,7 @@ _user = UserDto.user
 
 @api.route('/')
 class UserList(Resource):
+    """UserList Route"""
     @api.doc('list_of_registered_users')
     @api.marshal_list_with(_user, envelope='data')
     def get(self):
@@ -25,16 +26,18 @@ class UserList(Resource):
         return save_new_user(data=data)
 
 
-@api.route('/<public_id>')
-@api.param('public_id', 'The User identifier')
+@api.route('/<id>')
+@api.param('id', 'The User identifier')
 @api.response(404, 'User not found.')
 class User(Resource):
+    """User Route"""
     @api.doc('get a user')
     @api.marshal_with(_user, skip_none=True)
-    def get(self, public_id):
+    def get(self, id):
         """get a user given its identifier"""
-        user = get_a_user(public_id)
+        user = get_a_user(id)
         if not user:
             api.abort(404)
         else:
             return user
+        return None
