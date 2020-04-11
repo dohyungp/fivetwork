@@ -52,7 +52,7 @@ def generate_token(user):
             'Authorization': auth_token.decode()
         }
         return response_object, 201
-    except jwt.DecodeError:
+    except jwt.PyJWTError:
         response_object = {
             'status': 'fail',
             'message': 'Some error occurred. Please try again.'
