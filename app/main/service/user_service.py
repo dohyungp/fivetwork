@@ -17,12 +17,12 @@ def save_new_user(data):
         )
         save_changes(new_user)
         return generate_token(new_user)
-    else:
-        response_object = {
-            'status': 'fail',
-            'message': 'User already exists. Please Log in.',
-        }
-        return response_object, 409
+
+    response_object = {
+        'status': 'fail',
+        'message': 'User already exists. Please Log in.',
+    }
+    return response_object, 409
 
 
 def get_all_users():
@@ -33,6 +33,19 @@ def get_all_users():
 def get_a_user(id):
     """Get a user by id"""
     return User.query.filter_by(id=id).first()
+
+
+def update_a_user(id, data):
+    if 'hire_date' in data:
+        data['hire_date'] = datetime.strptime(data['hire_date'], '%Y-%m-%d')
+
+    User.query.filter_by(id=id).update(data)
+    db.session.commit()
+    response_object = {
+        'status': 'success',
+        'message': 'Successfully updated'
+    }
+    return response_object, 200
 
 
 def save_changes(data):
@@ -52,7 +65,7 @@ def generate_token(user):
             'Authorization': auth_token.decode()
         }
         return response_object, 201
-    except jwt.DecodeError:
+    except jwt.PyJWTError:
         response_object = {
             'status': 'fail',
             'message': 'Some error occurred. Please try again.'

@@ -55,7 +55,7 @@ class User(db.Model):
                 key,
                 algorithm='HS256'
             )
-        except Exception as e:
+        except jwt.PyJWTError as e:
             return e
 
     @staticmethod

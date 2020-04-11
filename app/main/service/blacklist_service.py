@@ -1,5 +1,6 @@
 from app.main import db
 from app.main.model.blacklist import BlacklistToken
+from sqlalchemy.exc import SQLAlchemyError
 
 
 def save_token(token):
@@ -13,7 +14,7 @@ def save_token(token):
             'message': 'Successfully logged out.'
         }
         return response_object, 200
-    except Exception as e:
+    except SQLAlchemyError as e:
         response_object = {
             'status': 'fail',
             'message': e
