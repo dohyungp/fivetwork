@@ -17,12 +17,12 @@ def save_new_user(data):
         )
         save_changes(new_user)
         return generate_token(new_user)
-    else:
-        response_object = {
-            'status': 'fail',
-            'message': 'User already exists. Please Log in.',
-        }
-        return response_object, 409
+
+    response_object = {
+        'status': 'fail',
+        'message': 'User already exists. Please Log in.',
+    }
+    return response_object, 409
 
 
 def get_all_users():
