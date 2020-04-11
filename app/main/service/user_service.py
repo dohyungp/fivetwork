@@ -35,6 +35,19 @@ def get_a_user(id):
     return User.query.filter_by(id=id).first()
 
 
+def update_a_user(id, data):
+    if 'hire_date' in data:
+        data['hire_date'] = datetime.strptime(data['hire_date'], '%Y-%m-%d')
+
+    User.query.filter_by(id=id).update(data)
+    db.session.commit()
+    response_object = {
+        'status': 'success',
+        'message': 'Successfully updated'
+    }
+    return response_object, 200
+
+
 def save_changes(data):
     """Save new data"""
     db.session.add(data)

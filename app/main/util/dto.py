@@ -15,7 +15,16 @@ class UserDto:
         'id': fields.Integer(description='user identifier', readonly=True),
         'email': fields.String(required=True, description='user email address'),
         'username': fields.String(required=True, description='user username'),
-        'hire_date': fields.Date(required=True, description='user hire date')
+        'hire_date': fields.Date(required=True, description='user hire date'),
+        'admin': fields.Boolean(required=True, description='is user admin')
+    })
+
+    profile = api.model('profile', {
+        'email': fields.String(description='user email address'),
+        'username': fields.String(description='user username'),
+        'hire_date': fields.Date(description='user hire date'),
+        'admin': fields.Boolean(description='is user admin'),
+        'mananger_id': fields.Integer(description='manager_id'),
     })
 
 

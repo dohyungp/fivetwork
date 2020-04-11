@@ -2,11 +2,12 @@ from flask import request
 from flask_restx import Resource
 
 from ..util.dto import UserDto
-from ..service.user_service import save_new_user, get_all_users, get_a_user
+from ..service.user_service import save_new_user, get_all_users, get_a_user, update_a_user
 
 api = UserDto.api
 _signup = UserDto.signup
 _lookup = UserDto.lookup
+_profile = UserDto.profile
 
 
 @api.route('/')
@@ -42,3 +43,13 @@ class User(Resource):
         else:
             return user
         return None
+
+    @api.doc('update user profile')
+    @api.expect(_profile, validate=True)
+    def patch(self, id):
+        data = request.json
+        user = get_a_user(id)
+        if not user:
+            api.abort(404)
+
+        return update_a_user(id, data)
