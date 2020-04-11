@@ -5,7 +5,6 @@ class UserDto:
     """User DTO"""
     api = Namespace('user', description='user related operations')
     signup = api.model('signup', {
-        'id': fields.Integer(description='user identifier', readonly=True),
         'email': fields.String(required=True, description='user email address'),
         'username': fields.String(required=True, description='user username'),
         'password': fields.String(required=True, description='user password'),
@@ -23,7 +22,7 @@ class UserDto:
 class AuthDto:
     """Auth DTO"""
     api = Namespace('auth', description='authentication related operations')
-    user_auth = api.model('auth_details', {
+    user_auth = api.model('auth', {
         'email': fields.String(required=True, description='The email address'),
         'password': fields.String(required=True, description='The user password '),
     })
