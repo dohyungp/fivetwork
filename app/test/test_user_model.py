@@ -7,12 +7,15 @@ from app.test.base import BaseTestCase
 
 
 class TestUserModel(BaseTestCase):
+    """Test User Model"""
 
     def test_encode_auth_token(self):
+        """Test method for testing encoding auth token"""
         user = User(
             email='test@test.com',
             password='test',
-            registered_on=datetime.datetime.utcnow()
+            username='Dohyung Park',
+            hire_date=datetime.date(2019, 1, 1),
         )
         db.session.add(user)
         db.session.commit()
@@ -20,10 +23,12 @@ class TestUserModel(BaseTestCase):
         self.assertTrue(isinstance(auth_token, bytes))
 
     def test_decode_auth_token(self):
+        """Test method for testing decoding auth token"""
         user = User(
             email='test@test.com',
             password='test',
-            registered_on=datetime.datetime.utcnow()
+            username='Dohyung Park',
+            hire_date=datetime.date(2019, 1, 1),
         )
         db.session.add(user)
         db.session.commit()

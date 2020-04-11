@@ -1,7 +1,10 @@
-from .. import db, flask_bcrypt
 import datetime
 import jwt
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from app.main.model.blacklist import BlacklistToken
+
+from .. import db, flask_bcrypt
 from ..config import key
 
 
@@ -11,14 +14,20 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
-    registered_on = db.Column(db.DateTime, nullable=False)
+    registered_on = db.Column(
+        db.DateTime, nullable=False, server_default=func.now())
+    hire_date = db.Column(db.Date, nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
-    public_id = db.Column(db.String(100), unique=True)
-    username = db.Column(db.String(50))
+    username = db.Column(db.String(50), nullable=False)
     password_hash = db.Column(db.String(100))
+    manager_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id', ondelete='SET NULL'))
+
+    children = relationship("User")
 
     @property
     def password(self):
+        """ Protect get User Password"""
         raise AttributeError('password: write-only field')
 
     @password.setter
@@ -27,6 +36,7 @@ class User(db.Model):
             password).decode('utf-8')
 
     def check_password(self, password):
+        """Check password is valid"""
         return flask_bcrypt.check_password_hash(self.password_hash, password)
 
     def encode_auth_token(self, user_id):
