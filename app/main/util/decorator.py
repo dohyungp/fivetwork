@@ -42,3 +42,27 @@ def admin_token_required(f):
         return f(*args, **kwargs)
 
     return decorated
+
+
+def self_token_required(f):
+    """Base Authenticate Wrapper"""
+    @wraps(f)
+    def decorated(*args, **kwargs):
+
+        data, status = Auth.get_logged_in_user(request)
+        token = data.get('data')
+
+        if not token:
+            return data, status
+
+        if (token['user_id'] not in args or
+                token['user_id'] != kwargs.get('user_id')) and not token['admin']:
+            response_object = {
+                'status': 'fail',
+                'message': 'request is not allowed'
+            }
+            return response_object, 401
+
+        return f(*args, **kwargs)
+
+    return decorated

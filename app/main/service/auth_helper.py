@@ -37,6 +37,7 @@ class Auth:
     def get_logged_in_user(new_request):
             # get the auth token
         auth_token = new_request.headers.get('Authorization')
+        auth_token = auth_token.split(' ')[1]
         if auth_token:
             resp = User.decode_auth_token(auth_token)
             if not isinstance(resp, str):
