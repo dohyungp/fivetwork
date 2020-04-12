@@ -10,10 +10,12 @@ api = UserDto.api
 _signup = UserDto.signup
 _lookup = UserDto.lookup
 _profile = UserDto.profile
+_manager = UserDto.manager
 
 auth_parser = api.parser()
 auth_parser.add_argument('Authorization', location='headers',
-                         help='authentication token. should pass "Bearer {{ token }}"', required=True)
+                         help='authentication token. should pass "Bearer {{ token }}"',
+                         required=True)
 
 
 @api.route('/')
@@ -50,9 +52,8 @@ class User(Resource):
             return user
         return None
 
-    @api.doc('update user profile')
-    # @api.expect(_profile, validate=True)
-    @api.doc(body=_profile, parser=auth_parser)
+    @api.doc('update user profile', body=_profile, parser=auth_parser)
+    @api.expect(_profile, validate=True)
     @self_token_required
     def patch(self, id):
         """patch a user given it identifier"""
@@ -60,7 +61,25 @@ class User(Resource):
         user = get_a_user(id)
         if not user:
             api.abort(404)
-        elif 'admin' in data and not user.admin:
+        elif ('admin' in data or 'manager_id' in data) and not user.admin:
             api.abort(403)
+
+        return update_a_user(id, data)
+
+
+@api.route('/<id>/manager')
+@api.param('id', 'The User identifier')
+@api.response(404, 'User or Manager not found.')
+class UserManagerRelationship(Resource):
+    """Manager Resource"""
+    @api.doc('update user manager relationship')
+    @api.expect(_manager, validate=True)
+    def patch(self, id):
+        """create user manager relationship given it identifier"""
+        data = request.json
+        user = get_a_user(id)
+        manager = get_a_user(data['manager_id'])
+        if not (user or manager):
+            api.abort(404)
 
         return update_a_user(id, data)
