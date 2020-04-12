@@ -42,7 +42,7 @@ class AuthDto:
 
 class ManagerDto:
     """Manager DTO"""
-    api = Namespace('manager', description='manager operations')
+    api = Namespace('manager', description='manager related operations')
     staff = api.model('staff', {
         'id': fields.Integer(description='staff identifier', readonly=True),
         'manager_id': fields.Integer(description='manager identifier', readonly=True),
