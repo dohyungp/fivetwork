@@ -55,13 +55,13 @@ def self_token_required(f):
         if not token:
             return data, status
 
-        if (token['user_id'] not in args or
-                token['user_id'] != kwargs.get('user_id')) and not token['admin']:
+        if (str(token['user_id']) not in args and
+                str(token['user_id']) != kwargs.get('id') and not token['admin']):
             response_object = {
                 'status': 'fail',
                 'message': 'request is not allowed'
             }
-            return response_object, 401
+            return response_object, 403
 
         return f(*args, **kwargs)
 

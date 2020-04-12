@@ -17,15 +17,37 @@ def register_user(self):
     )
 
 
-def login_user(self):
+def login_user(self, email='example@gmail.com'):
     """Test function for login user via client"""
     return self.client.post(
         '/api/auth/login',
         data=json.dumps(dict(
-            email='example@gmail.com',
+            email=email,
             password='123456'
         )),
         content_type='application/json'
+    )
+
+
+def update_user_profile(self, headers):
+    return self.client.patch(
+        '/api/user/1',
+        data=json.dumps(dict(
+            email='example2@gmail.com'
+        )),
+        content_type='application/json',
+        headers=headers
+    )
+
+
+def update_user_to_admin(self, headers):
+    return self.client.patch(
+        '/api/user/1',
+        data=json.dumps(dict(
+            admin=True
+        )),
+        content_type='application/json',
+        headers=headers
     )
 
 
@@ -43,6 +65,48 @@ class TestAuthBlueprint(BaseTestCase):
 
             # registered user login
             login_response = login_user(self)
+            data = json.loads(login_response.data.decode())
+            self.assertTrue(data['Authorization'])
+            self.assertEqual(login_response.status_code, 200)
+
+    def test_valid_user_data_update_after_login(self):
+
+        with self.client:
+            user_response = register_user(self)
+            response_data = json.loads(user_response.data.decode())
+            self.assertTrue(response_data['Authorization'])
+            self.assertEqual(user_response.status_code, 201)
+
+            login_response = login_user(self)
+            data = json.loads(login_response.data.decode())
+            self.assertTrue(data['Authorization'])
+            self.assertEqual(login_response.status_code, 200)
+
+            headers = dict(
+                Authorization='Bearer ' + json.loads(
+                    login_response.data.decode()
+                )['Authorization']
+            )
+
+            update_response = update_user_profile(self, headers)
+            data = json.loads(update_response.data.decode())
+            self.assertEqual(update_response.status_code, 200)
+            self.assertEqual(data['status'], 'success')
+
+            update_response = update_user_to_admin(self, headers)
+            data = json.loads(update_response.data.decode())
+            self.assertEqual(update_response.status_code, 403)
+
+            # valid token logout
+            response = self.client.post(
+                '/api/auth/logout',
+                headers=headers
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertEqual(response.status_code, 200)
+
+            login_response = login_user(self, 'example2@gmail.com')
             data = json.loads(login_response.data.decode())
             self.assertTrue(data['Authorization'])
             self.assertEqual(login_response.status_code, 200)

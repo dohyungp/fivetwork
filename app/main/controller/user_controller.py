@@ -61,6 +61,6 @@ class User(Resource):
         if not user:
             api.abort(404)
         elif 'admin' in data and not user.admin:
-            api.abort(401)
+            api.abort(403)
 
         return update_a_user(id, data)
