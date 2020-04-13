@@ -28,7 +28,6 @@ def save_new_user(data):
             username=data['username'],
             password=data['password'],
             hire_date=datetime.strptime(data['hire_date'], '%Y-%m-%d'),
-            # registered_on=datetime.datetime.utcnow()
         )
         save_changes(new_user)
         return generate_token(new_user)
