@@ -24,7 +24,10 @@ class UserDto:
         'username': fields.String(description='user username'),
         'hire_date': fields.Date(description='user hire date'),
         'admin': fields.Boolean(description='is user admin'),
-        'mananger_id': fields.Integer(description='manager_id'),
+    })
+
+    manager = api.model('user_manager_relationship', {
+        'manager_id': fields.Integer(description='manger id', required=True)
     })
 
 
@@ -34,4 +37,16 @@ class AuthDto:
     user_auth = api.model('auth', {
         'email': fields.String(required=True, description='The email address'),
         'password': fields.String(required=True, description='The user password '),
+    })
+
+
+class ManagerDto:
+    """Manager DTO"""
+    api = Namespace('manager', description='manager related operations')
+    staff = api.model('staff', {
+        'id': fields.Integer(description='staff identifier', readonly=True),
+        'manager_id': fields.Integer(description='manager identifier', readonly=True),
+        'email': fields.String(required=True, description='staff email address'),
+        'username': fields.String(required=True, description='staff username'),
+        'hire_date': fields.Date(required=True, description='staff hire date')
     })
