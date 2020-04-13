@@ -50,3 +50,16 @@ class ManagerDto:
         'username': fields.String(required=True, description='staff username'),
         'hire_date': fields.Date(required=True, description='staff hire date')
     })
+
+
+class DepartmentDto:
+    """Department DTO"""
+    api = Namespace('department', description='department realted operations')
+    establish_dept = api.model('est_department', {
+        'department_name': fields.String(description='department name', required=True)
+    })
+
+    lookup_dept = api.model('lookup_department', {
+        'id': fields.Integer(description='department identifer', readonly=True),
+        'department_name': fields.String(description='department name', required=True)
+    })
