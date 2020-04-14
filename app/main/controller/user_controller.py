@@ -3,7 +3,12 @@ from flask_restx import Resource
 
 from ..util.decorator import self_token_required
 from ..util.dto import UserDto
-from ..service.user_service import save_new_user, get_all_users, get_a_user, update_a_user
+from ..service.user_service import (save_new_user,
+                                    get_all_users,
+                                    get_a_user,
+                                    update_a_user,
+                                    assign_manager,
+                                    unassign_manager)
 
 
 api = UserDto.api
@@ -61,9 +66,7 @@ class User(Resource):
         user = get_a_user(id)
         if not user:
             api.abort(404)
-        elif ('admin' in data or
-              'manager_id' in data or
-              'department_id' in data) and not user.admin:
+        elif ('admin' in data or 'department_id' in data) and not user.admin:
             api.abort(403)
 
         return update_a_user(id, data)
@@ -72,7 +75,7 @@ class User(Resource):
 @api.route('/<id>/manager')
 @api.param('id', 'The User identifier')
 @api.response(404, 'User or Manager not found.')
-class UserManagerRelationship(Resource):
+class UserManager(Resource):
     """Manager Resource"""
     @api.doc('update user manager relationship')
     @api.expect(_manager, validate=True)
@@ -84,4 +87,19 @@ class UserManagerRelationship(Resource):
         if not (user or manager):
             api.abort(404)
 
-        return update_a_user(id, data)
+        if user.manager_id == data['manager_id']:
+            return dict(), 304
+
+        return assign_manager(id, data['manager_id'])
+
+    @api.doc('delete user manager relationship')
+    def delete(self, id):
+        """delete user manager relationship given it identifier"""
+        user = get_a_user(id)
+        if not user:
+            api.abort(404)
+
+        if not user.manager_id:
+            return dict(), 304
+
+        return unassign_manager(id)

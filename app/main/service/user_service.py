@@ -50,7 +50,30 @@ def get_a_user(id):
     return User.query.filter_by(id=id).first()
 
 
+def assign_manager(id, manager_id):
+    """Assign manager to user"""
+    User.query.filter_by(id=id).update({'manager_id': manager_id})
+    db.session.commit()
+    response_object = {
+        'status': 'success',
+        'message': 'The manager is sucessfully assigned'
+    }
+    return response_object, 200
+
+
+def unassign_manager(id):
+    """Unassign manager to user"""
+    User.query.filter_by(id=id).update({'manager_id': None})
+    db.session.commit()
+    response_object = {
+        'status': 'success',
+        'message': 'Successfully manager is unassigned'
+    }
+    return response_object, 200
+
+
 def update_a_user(id, data):
+    """Update a user information"""
     if 'hire_date' in data:
         data['hire_date'] = datetime.strptime(data['hire_date'], '%Y-%m-%d')
 

@@ -66,6 +66,9 @@ class DepartmentDto:
     })
 
     department_information = api.model('department_detail', {
-        'department_name': fields.String(description='department name'),
-        'manager_id': fields.Integer(description='department manager id')
+        'department_name': fields.String(description='department name')
+    })
+
+    department_manager = api.model('department_manager', {
+        'manager_id': fields.Integer(description='department manager identifier')
     })
