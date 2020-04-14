@@ -1,4 +1,5 @@
 from app.main import db
+from app.main.model.user import User
 from app.main.model.department import Department
 
 
@@ -36,6 +37,16 @@ def update_a_department(id, data):
         }
         return response_object, 403
 
+    if data.get('manager_id'):
+        user = User.query.filter_by(id=data['manager_id']).first()
+        if not user:
+            response_object = {
+                'status': 'fail',
+                'message': 'The manager is not found'
+            }
+            return response_object, 404
+        User.query.filter_by(id=data['manager_id']).update(
+            {'department_id': id})
     Department.query.filter_by(id=id).update(data)
     db.session.commit()
     response_object = {
