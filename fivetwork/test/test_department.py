@@ -1,9 +1,9 @@
 import unittest
 import json
 
-from app.main import db
-from app.main.model.department import Department
-from app.test.base import BaseTestCase
+from fivetwork.main import db
+from fivetwork.main.model.department import Department
+from fivetwork.test.base import BaseTestCase
 
 
 def add_department(self):

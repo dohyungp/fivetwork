@@ -1,5 +1,5 @@
-from app.main import db
-from app.main.model.blacklist import BlacklistToken
+from fivetwork.main import db
+from fivetwork.main.model.blacklist import BlacklistToken
 from sqlalchemy.exc import SQLAlchemyError
 
 
