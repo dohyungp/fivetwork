@@ -24,6 +24,7 @@ class UserDto:
         'username': fields.String(description='user username'),
         'hire_date': fields.Date(description='user hire date'),
         'admin': fields.Boolean(description='is user admin'),
+        'department_id': fields.Integer(description='department id'),
     })
 
     manager = api.model('user_manager_relationship', {
@@ -49,4 +50,25 @@ class ManagerDto:
         'email': fields.String(required=True, description='staff email address'),
         'username': fields.String(required=True, description='staff username'),
         'hire_date': fields.Date(required=True, description='staff hire date')
+    })
+
+
+class DepartmentDto:
+    """Department DTO"""
+    api = Namespace('department', description='department realted operations')
+    establish_dept = api.model('est_department', {
+        'department_name': fields.String(description='department name', required=True)
+    })
+
+    lookup_dept = api.model('lookup_department', {
+        'id': fields.Integer(description='department identifer', readonly=True),
+        'department_name': fields.String(description='department name', required=True)
+    })
+
+    department_information = api.model('department_detail', {
+        'department_name': fields.String(description='department name')
+    })
+
+    department_manager = api.model('department_manager', {
+        'manager_id': fields.Integer(description='department manager identifier')
     })

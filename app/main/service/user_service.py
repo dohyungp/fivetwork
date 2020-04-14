@@ -2,6 +2,7 @@ from datetime import datetime
 import jwt
 from app.main import db
 from app.main.model.user import User
+from app.main.model.department import Department
 
 
 def create_admin(data):
@@ -28,7 +29,6 @@ def save_new_user(data):
             username=data['username'],
             password=data['password'],
             hire_date=datetime.strptime(data['hire_date'], '%Y-%m-%d'),
-            # registered_on=datetime.datetime.utcnow()
         )
         save_changes(new_user)
         return generate_token(new_user)
@@ -50,13 +50,45 @@ def get_a_user(id):
     return User.query.filter_by(id=id).first()
 
 
+def assign_manager(id, manager_id):
+    """Assign manager to user"""
+    User.query.filter_by(id=id).update({'manager_id': manager_id})
+    db.session.commit()
+    response_object = {
+        'status': 'success',
+        'message': 'The manager is sucessfully assigned'
+    }
+    return response_object, 200
+
+
+def unassign_manager(id):
+    """Unassign manager to user"""
+    User.query.filter_by(id=id).update({'manager_id': None})
+    db.session.commit()
+    response_object = {
+        'status': 'success',
+        'message': 'Successfully manager is unassigned'
+    }
+    return response_object, 200
+
+
 def update_a_user(id, data):
+    """Update a user information"""
     if 'hire_date' in data:
         data['hire_date'] = datetime.strptime(data['hire_date'], '%Y-%m-%d')
 
+    if 'department_id' in data:
+        dept = Department.query.filter_by(id=data['department_id']).first()
+        if not dept:
+            response_object = {
+                'status': 'fail',
+                'message': 'Request department is not found.'
+            }
+            return response_object, 404
+
     # Prevent not allow data injection
     not_allowed_update = set(data.keys()) - \
-        set(['hire_date', 'email', 'admin', 'username'])
+        set(['hire_date', 'email', 'admin', 'username', 'department_id'])
     if not_allowed_update:
         response_object = {
             'status': 'fail',

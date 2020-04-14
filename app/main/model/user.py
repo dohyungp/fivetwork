@@ -22,8 +22,13 @@ class User(db.Model):
     password_hash = db.Column(db.String(100))
     manager_id = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='SET NULL'))
+    department_id = db.Column(db.Integer, db.ForeignKey(
+        'department.id', ondelete='SET NULL'))
 
-    children = relationship("User")
+    staff = relationship("User")
+    department = relationship('Department',
+                              foreign_keys=[department_id],
+                              back_populates='members')
 
     @property
     def password(self):
