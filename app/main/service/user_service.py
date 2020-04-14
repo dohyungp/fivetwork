@@ -2,6 +2,7 @@ from datetime import datetime
 import jwt
 from app.main import db
 from app.main.model.user import User
+from app.main.model.department import Department
 
 
 def create_admin(data):
@@ -53,9 +54,18 @@ def update_a_user(id, data):
     if 'hire_date' in data:
         data['hire_date'] = datetime.strptime(data['hire_date'], '%Y-%m-%d')
 
+    if 'department_id' in data:
+        dept = Department.query.filter_by(id=data['department_id']).first()
+        if not dept:
+            response_object = {
+                'status': 'fail',
+                'message': 'Request department is not found.'
+            }
+            return response_object, 404
+
     # Prevent not allow data injection
     not_allowed_update = set(data.keys()) - \
-        set(['hire_date', 'email', 'admin', 'username'])
+        set(['hire_date', 'email', 'admin', 'username', 'department_id'])
     if not_allowed_update:
         response_object = {
             'status': 'fail',

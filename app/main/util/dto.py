@@ -24,6 +24,7 @@ class UserDto:
         'username': fields.String(description='user username'),
         'hire_date': fields.Date(description='user hire date'),
         'admin': fields.Boolean(description='is user admin'),
+        'department_id': fields.Integer(description='department id'),
     })
 
     manager = api.model('user_manager_relationship', {
@@ -62,4 +63,9 @@ class DepartmentDto:
     lookup_dept = api.model('lookup_department', {
         'id': fields.Integer(description='department identifer', readonly=True),
         'department_name': fields.String(description='department name', required=True)
+    })
+
+    department_information = api.model('department_detail', {
+        'department_name': fields.String(description='department name'),
+        'manager_id': fields.Integer(description='department manager id')
     })

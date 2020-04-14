@@ -5,12 +5,14 @@ from ..util.dto import DepartmentDto
 from ..service.department_service import (create_new_department,
                                           get_a_department,
                                           get_all_departments,
+                                          update_a_department,
                                           delete_a_department)
 
 
 api = DepartmentDto.api
 _lookup = DepartmentDto.lookup_dept
 _establish = DepartmentDto.establish_dept
+_detail = DepartmentDto.department_information
 
 auth_parser = api.parser()
 auth_parser.add_argument('Authorization', location='headers',
@@ -51,6 +53,17 @@ class Department(Resource):
         else:
             return department
         return None
+
+    @api.doc('update department info')
+    @api.expect(_detail, validate=True)
+    def patch(self, id):
+        """patch dept data"""
+        data = request.json
+        department = get_a_department(id)
+        if not department:
+            api.abort(404)
+            return
+        return update_a_department(id, data)
 
     @api.doc('delete a department')
     def delete(self, id):

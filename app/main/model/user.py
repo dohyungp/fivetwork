@@ -26,6 +26,9 @@ class User(db.Model):
         'department.id', ondelete='SET NULL'))
 
     staff = relationship("User")
+    department = relationship('Department',
+                              foreign_keys=[department_id],
+                              back_populates='members')
 
     @property
     def password(self):

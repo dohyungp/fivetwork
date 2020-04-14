@@ -61,7 +61,9 @@ class User(Resource):
         user = get_a_user(id)
         if not user:
             api.abort(404)
-        elif ('admin' in data or 'manager_id' in data) and not user.admin:
+        elif ('admin' in data or
+              'manager_id' in data or
+              'department_id' in data) and not user.admin:
             api.abort(403)
 
         return update_a_user(id, data)

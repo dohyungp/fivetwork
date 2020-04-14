@@ -27,7 +27,8 @@ def get_a_department(id):
 
 def update_a_department(id, data):
     # Prevent not allow data injection
-    not_allowed_update = set(data.keys()) - set(['department_name'])
+    not_allowed_update = set(data.keys()) - \
+        set(['department_name', 'manager_id'])
     if not_allowed_update:
         response_object = {
             'status': 'fail',
