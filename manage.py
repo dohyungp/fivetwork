@@ -2,10 +2,10 @@ import os
 import unittest
 import click
 from flask_migrate import Migrate, MigrateCommand
-from app import blueprint
-from app.main import create_app, db
-from app.main.model import blacklist, user, department
-from app.main.service.user_service import create_admin
+from fivetwork import blueprint
+from fivetwork.main import create_app, db
+from fivetwork.main.model import blacklist, user, department
+from fivetwork.main.service.user_service import create_admin
 
 app = create_app(os.getenv('PROD_ENV') or 'dev')
 app.register_blueprint(blueprint)
@@ -23,7 +23,7 @@ def migrate_db():
 @app.cli.command("test")
 def test():
     """Runs the unit tests."""
-    tests = unittest.TestLoader().discover('app/test', pattern='test*.py')
+    tests = unittest.TestLoader().discover('fivetwork/test', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         return 0

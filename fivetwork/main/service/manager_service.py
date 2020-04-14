@@ -1,4 +1,4 @@
-from app.main.model.user import User
+from fivetwork.main.model.user import User
 
 
 def get_all_staffs(manager_id):

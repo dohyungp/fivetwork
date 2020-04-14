@@ -1,6 +1,6 @@
-from app.main import db
-from app.main.model.user import User
-from app.main.model.department import Department
+from fivetwork.main import db
+from fivetwork.main.model.user import User
+from fivetwork.main.model.department import Department
 
 
 def create_new_department(data):
