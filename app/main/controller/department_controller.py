@@ -50,9 +50,9 @@ class Department(Resource):
         department = get_a_department(id)
         if not department:
             api.abort(404)
-        else:
-            return department
-        return None
+            return None
+
+        return department
 
     @api.doc('update department info')
     @api.expect(_detail, validate=True)
@@ -62,7 +62,7 @@ class Department(Resource):
         department = get_a_department(id)
         if not department:
             api.abort(404)
-            return
+            return None
         return update_a_department(id, data)
 
     @api.doc('delete a department')
@@ -71,6 +71,6 @@ class Department(Resource):
         department = get_a_department(id)
         if not department:
             api.abort(404)
-        else:
-            return delete_a_department(id)
-        return None
+            return None
+
+        return delete_a_department(id)
