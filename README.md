@@ -9,3 +9,40 @@
 ```
 localhost:5000/api/documentation
 ```
+
+
+### Usage
+
+#### CLI Setting
+```sh
+export FLASK_APP=manage
+```
+
+#### Migrate DB
+
+```sh
+flask db init
+```
+
+```sh
+flask db migrate --comment "blas"
+```
+
+```sh
+flask db upgrade
+```
+
+#### Testing
+```sh
+flask test
+```
+
+#### Run Flask App
+```sh
+flask run
+```
+
+#### Create Super user
+```sh
+flask createsuperuser
+```
