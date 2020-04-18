@@ -6,9 +6,13 @@ from fivetwork import blueprint
 from fivetwork.main import create_app, db
 from fivetwork.main.model import blacklist, user, department
 from fivetwork.main.service.user_service import create_admin
+from frontend import view
+from home import home
 
 app = create_app(os.getenv('PROD_ENV') or 'dev')
+app.register_blueprint(home)
 app.register_blueprint(blueprint)
+app.register_blueprint(view)
 
 app.app_context().push()
 migrate = Migrate(app, db)
