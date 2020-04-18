@@ -20,13 +20,18 @@ migrate = Migrate(app, db)
 
 @app.cli.command('db')
 def migrate_db():
-    """Run Database Migration"""
+    """DB Migration tool injection
+    """
     MigrateCommand()
 
 
 @app.cli.command("test")
 def test():
-    """Runs the unit tests."""
+    """Unit testing cli command
+
+    :return: result code
+    :rtype: int
+    """
     tests = unittest.TestLoader().discover('fivetwork/test', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
@@ -40,7 +45,17 @@ def test():
 @click.option('--password', prompt='Password')
 @click.option('--password_check', prompt='Password (again)')
 def create_super_user(username, email, password, password_check):
-    """Create super user in CLI"""
+    """Create service superuser
+
+    :param username: service admin username
+    :type username: string
+    :param email: service admin email
+    :type email: string
+    :param password: service admin password
+    :type password: string
+    :param password_check: password double check
+    :type password_check: string
+    """
     assert password == password_check, 'Those passwords did\'nt match.'
     data = dict(username=username, email=email, password=password)
     result = create_admin(data)

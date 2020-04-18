@@ -7,5 +7,9 @@ home = Blueprint('home', __name__, url_prefix='/')
 
 @home.route('/')
 def index():
-    """route resource"""
+    """root resource
+
+    :return: redirect
+    :rtype: Response
+    """
     return redirect(url_for('view.index'))
