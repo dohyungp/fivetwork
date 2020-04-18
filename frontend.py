@@ -10,7 +10,13 @@ view = Blueprint('view',
 @view.route('/', defaults={'path': ''})
 @view.route('/<path:path>')
 def index(path):
-    """serve view"""
+    """Serve Frontend Page
+
+    :param path: dynamic path for react-router
+    :type path: string
+    :return: file
+    :rtype: Response
+    """
     if path != '' and os.path.exists(view.static_folder + '/' + path):
         return send_from_directory(view.static_folder, path)
 
