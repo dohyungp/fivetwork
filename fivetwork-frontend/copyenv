@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+import os
+from pathlib import Path
+
+
+def copy_env_from_flaskenv():
+    """Copy env file from flaskenv
+    """
+    current_path = Path(os.path.abspath(__file__))
+    root = current_path.parents[1]
+    flaskenv_path = root.joinpath('.flaskenv')
+    with open(flaskenv_path, 'r') as f:
+        react_env = ['REACT_APP_{}'.format(l) for l in f if l != '']
+
+    react_path = current_path.parents[0]
+    reactenv_path = react_path.joinpath('.env')
+    with open(reactenv_path, 'w') as f:
+        f.writelines(react_env)
+
+
+if __name__ == '__main__':
+    copy_env_from_flaskenv()
