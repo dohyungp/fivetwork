@@ -141,3 +141,6 @@ cython_debug/
 
 # migration folder
 /migrations
+
+# Flask env file
+.flaskenv
